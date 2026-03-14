@@ -80,12 +80,3 @@ Esta biblioteca foi projetada para funcionar sem a necessidade obrigatória de m
 Sinta-se à vontade para abrir *Issues* ou enviar *Pull Requests*. Toda ajuda para tornar o **AnimaCanvas** mais robusto é bem-vinda!
 
 **Desenvolvido por [Marcos Petzinger**](https://www.google.com/search?q=https://github.com/marcosptz)
-
----
-
-### Dicas para o GitHub:
-
-1. **Imagens:** Se puder, coloque um GIF do Sonic (ou do gato realista que você mencionou) correndo no topo do README. Isso atrai muito mais atenção.
-2. **Licença:** Não esqueça de adicionar um arquivo `LICENSE` (geralmente MIT) no seu repositório.
-
-**O que achou dessa estrutura? Gostaria que eu adicionasse uma seção específica detalhando os métodos da classe `AnimaCanvas`, como o `setZoom()` ou o `clear()`?**
