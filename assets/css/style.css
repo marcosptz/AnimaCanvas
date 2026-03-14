@@ -1,0 +1,9 @@
+#box {
+  height: 300px;
+}
+
+@media (min-width: 700px) {
+  #box {
+    height: 900px;
+  }
+}
