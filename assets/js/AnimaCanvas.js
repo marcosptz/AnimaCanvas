@@ -32,7 +32,7 @@ class AnimaCanvas {  // Caso for exportar como módulo, usar "export default" an
 		this.box.style.display = 'flex';
 		this.box.style.flexDirection = 'column';
 		this.box.style.alignItems = 'center'; 
-		this.box.style.padding = '20px';
+		this.box.style.padding = '20px auto';
 		this.box.style.backgroundColor = '#696969';
 		this.box.style.border = 'solid #363636 2px';
 
@@ -49,7 +49,7 @@ class AnimaCanvas {  // Caso for exportar como módulo, usar "export default" an
         this.canvas.style.border = 'solid #4F4F4F 1px'; // Borda fina para o papel
         this.canvas.style.boxShadow = '0 4px 15px rgba(0,0,0,0.3)'; // Sombra para dar profundidade
         this.canvas.style.display = 'block';
-	    this.canvas.style.margin = '10px auto';
+	    this.canvas.style.margin = 'auto';
 
 	    // Adicionando o Canvas a variável ctx
     	this.ctx = this.canvas.getContext('2d');
@@ -430,6 +430,13 @@ class AnimaCanvas {  // Caso for exportar como módulo, usar "export default" an
 	clear() {
   		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
   	}
+
+	/**
+	 * Método que reseta o Canvas
+	 */
+	reset() {
+		this.ctx.reset();
+	}
 
     /***** Caso seja necessário, adicione aqui os métodos novos *****/
 	/** code... **/

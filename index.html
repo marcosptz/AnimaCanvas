@@ -46,48 +46,241 @@
       </div>
     </header>
     <main>
-
       <section class="py-0 text-center container">
         <div class="row py-lg-5">
           <div class="col-lg-12 col-md-8 mx-auto border-bottom">
             <h1 class="fw-light">Canvas</h1>
             <p class="lead text-body-secondary">Criando animações no Canvas</p>
             <p>
-              <a href="#" class="btn btn-primary my-2" onclick="">Executar teste</a>
-              <a href="#" class="btn btn-secondary my-2" onclick="">Resetar o Canvas</a>
+              <a href="#" class="btn btn-primary my-2" onclick="animateCanvas()">Iniciar</a>
+              <a href="#" class="btn btn-secondary my-2" onclick="resetAnimate()">Parar</a>
             </p>
+          </div>
+          <div class="col-lg-2 col-md-8 mx-auto">
+            <div class="row ms-1 pb-3 position-relative">
+              <div class="col-lg-12 col-12">
+                <label for="referencia" class="form-label"><span>Zoom</span></label>
+                <div class="input-group">
+                  <a class="btn btn-secondary input-group-text" onclick="addZoom(0)"><i class="bi bi-dash"></i></a>
+                  <input type="text" class="form-control" id="zoom" value="1" onchange="addZoom(2)" maxlength="50">
+                  <a class="btn btn-success input-group-text" onclick="addZoom(1)"><i class="bi bi-plus"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-8 mx-auto">
+            <div class="row ms-1 pb-3 position-relative">
+              <div class="col-lg-12 col-12">
+                <label for="referencia" class="form-label"><span>Alterar personegem</span></label>
+                <select id="alterChacter" class="form-control" onchange="alterCharacter(this.value)"></select>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-8 mx-auto">
+            <div class="row ms-1 pb-3 position-relative">
+              <div class="col-lg-12 col-12">
+                <label for="referencia" class="form-label"><span>Alterar Cenário</span></label>
+                <select id="alterBg" class="form-control" onchange="alterBackGround(this.value)"></select>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       <div class="album py-0 bg-body-tertiary">
         <div class="container">
-
           <div class="row row-cols-12 row-cols-sm-12 row-cols-md-1 g-3">
             <div class="col">
-              <div class="card shadow-sm" id="box_canvas">
-              </div>
-              <canvas id="canvas_teste" width="500" height="500"></canvas>
-              <form hidden id="form_canvas">
-                <input hidden type="number" id="qtd_linhas" value=0>
-                <div class="container-fluid">
-                  <div class="row">
-                    <div class="col mb-3 pb-3">
-                      <label for="exampleInputEmail1" class="form-label">Pasição x</label>
-                      <input type="number" class="form-control" id="pos_x" value="10" onchange="" aria-describedby="emailHelp">
-                      <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
-                    </div>
-                    <div class="col mb-3 pb-3">
-                      <label for="exampleInputEmail1" class="form-label">Pasição y</label>
-                      <input type="number" class="form-control" id="pos_y" value="10" onchange="" aria-describedby="emailHelp">
-                      <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
+              <div class="card shadow-sm mb-5" id="box_canvas"></div>
+              <div class="container card bg-control text-white shadow-sm mb-5" style="display: flex; align-items: center; flex-direction: column; margin: auto; padding: 40px;">
+                <div class="row">
+                  <div class="col">
+                    <div class="btn-group ms-2" role="group" aria-label="Basic mixed styles example">
+                      <button type="button" class="btn btn-outline-primary btn-lg text-white btn-disabled" disabled>Left</button>
+                      <button type="button" class="btn btn-primary btn-lg rounded-top" onclick="moveUp()"><i class="bi bi-arrow-up-circle-fill"></i></button>
+                      <button type="button" class="btn btn-outline-primary btn-lg text-white btn-disabled" disabled>Right</button>
                     </div>
                   </div>
                 </div>
-                <button type="button" class="btn btn-primary" id="print_pdf">Imprimir</button>
-                <button type="button" class="btn btn-primary" onclick="">Adicionar linha</button>
-              </form>
-            </div>
+                <div class="row">
+                  <div class="col">
+                    <input hidden id="pause_value" type="number" value="0">
+                    <div class="btn-group me-1" role="group" aria-label="Basic mixed styles example">
+                      <button type="button" class="btn btn-danger btn-lg" onclick="moveLeft()"><i class="bi bi-arrow-left-circle-fill"></i></button>
+                      <button type="button" class="btn btn-warning btn-lg" onclick="stop()"><i class="bi bi-pause-circle-fill"></i>&nbsp;</button>
+                      <button type="button" class="btn btn-success btn-lg" onclick="moveRigth()"><i class="bi bi-arrow-right-circle-fill"></i></button>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="btn-group ms-2" role="group" aria-label="Basic mixed styles example">
+                      <button type="button" class="btn btn-outline-primary btn-lg text-white btn-disabled" disabled>Left</button>
+                      <button type="button" class="btn btn-primary btn-lg rounded-bottom" onclick="moveDn()"><i class="bi bi-arrow-down-circle-fill"></i></button>
+                      <button type="button" class="btn btn-outline-primary btn-lg text-white btn-disabled" disabled>Right</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="btn-group mt-5 mb-0" role="group" aria-label="Basic mixed styles example">
+                      <button type="button" class="btn btn-danger btn-lg" onclick="animateCanvas(false)"><i class="bi bi-x-square"></i></button>
+                      <button type="button" class="btn btn-warning btn-lg" onclick="setSpeed(0)"><i class="bi bi-square"></i></button>
+                      <button type="button" class="btn btn-primary btn-lg" onclick="setSpeed()"><i class="bi bi-triangle"></i></button>
+                      <button type="button" class="btn btn-success btn-lg" onclick="animateCanvas()"><i class="bi bi-circle"></i></button>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="btn-group mt-5 mb-0" role="group" aria-label="Basic mixed styles example">
+                      <button type="button" class="btn btn-warning" onclick="stop()"><i class="bi bi-x-lg"></i></button>
+                      <button type="button" class="btn btn-primary" onclick="stop()"><i class="bi bi-house-door-fill"></i></button>
+                      <button type="button" class="btn btn-secondary" onclick="moveLeft()"><i class="bi bi-gear-fill"></i></button>
+                      <!-- <button type="button" class="btn btn-success" onclick="moveRigth()"><i class="bi bi-circle"></i></button> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p class="d-inline-flex gap-1">
+                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                  Configuração
+                </button>
+              </p>
+              <div class="collapse mb-3" id="collapseExample">
+                <div class="card card-body">
+                  <form class="py-3 border-bottom" id="form_canvas">
+                    <input hidden type="number" id="qtd_linhas" value=0>
+                    <div class="container-fluid">
+                      <div class="row">
+                        <div class="col mb-3 pb-3">
+                          <label for="exampleInputEmail1" class="form-label">Pasição x</label>
+                          <input type="number" class="form-control element" id="pos_x" value="0" onchange="animateCanvas()" aria-describedby="emailHelp">
+                          <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
+                        </div>
+                        <div class="col mb-3 pb-3">
+                          <label for="exampleInputEmail1" class="form-label">Pasição y</label>
+                          <input type="number" class="form-control element" id="pos_y" value="530" onchange="animateCanvas()" aria-describedby="emailHelp">
+                          <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col mb-3 pb-3">
+                          <label for="exampleInputEmail1" class="form-label">Velocidade</label>
+                          <input type="number" class="form-control element" id="speed" value="5" onchange="animateCanvas()" aria-describedby="emailHelp">
+                          <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
+                        </div>
+                        <div class="col mb-3 pb-3">
+                          <label for="exampleInputEmail1" class="form-label">Tamanho</label>
+                          <input type="number" class="form-control element" id="sprite_scale" value="0.95" onchange="animateCanvas()" aria-describedby="emailHelp">
+                          <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col mb-3 pb-3">
+                          <label for="exampleInputEmail1" class="form-label">Movimento x</label>
+                          <select class="form-control element" id="move_x"onchange="animateCanvas()">
+                            <option value="0">Não</option>
+                            <option value="1">Sim</option>
+                          </select>
+                          <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
+                        </div>
+                        <div class="col mb-3 pb-3">
+                          <label for="exampleInputEmail1" class="form-label">Movimento y</label>
+                          <select class="form-control element" id="move_y"onchange="animateCanvas()">
+                          <option value="0">Não</option>
+                            <option value="1">Sim</option>
+                          </select>
+                          <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
+                        </div>
+                        <div class="row">
+                          <div class="col mb-3 pb-3">
+                            <label for="exampleInputEmail1" class="form-label">Direção x</label>
+                            <select class="form-control element" id="direction_x" onchange="animateCanvas()">
+                            <option value="1">Sim</option>
+                              <option value="0">Não</option>
+                            </select>
+                            <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
+                          </div>
+                          <div class="col mb-3 pb-3">
+                            <label for="exampleInputEmail1" class="form-label">Direção y</label>
+                            <select class="form-control element" id="direction_y" onchange="animateCanvas()">
+                            <option value="1">Sim</option>
+                              <option value="0">Não</option>
+                            </select>
+                            <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col mb-3 pb-3">
+                            <label for="exampleInputEmail1" class="form-label">Imagem</label>
+                            <input type="text" class="form-control element" id="img_path" value="img1.png" onchange="alterCharacter(this.value)" aria-describedby="emailHelp">
+                            <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
+                          </div>
+                          <div class="col mb-3 pb-3">
+                            <label for="exampleInputEmail1" class="form-label">Qtd frames</label>
+                            <input type="number" class="form-control element" id="qtd_frames" value="4" onchange="animateCanvas()" aria-describedby="emailHelp">
+                            <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col mb-3 pb-3">
+                            <label for="exampleInputEmail1" class="form-label">Frame x</label>
+                            <input type="number" class="form-control element" id="frame_x" value="0" onchange="animateCanvas()" aria-describedby="emailHelp">
+                            <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
+                          </div>
+                          <div class="col mb-3 pb-3">
+                            <label for="exampleInputEmail1" class="form-label">Frame y</label>
+                            <input type="number" class="form-control element" id="frame_y" value="260" onchange="animateCanvas()" aria-describedby="emailHelp">
+                            <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col mb-3 pb-3">
+                            <label for="exampleInputEmail1" class="form-label">Frame w</label>
+                            <input type="number" class="form-control element" id="frame_w" value="500" onchange="animateCanvas()" aria-describedby="emailHelp">
+                            <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
+                          </div>
+                          <div class="col mb-3 pb-3">
+                            <label for="exampleInputEmail1" class="form-label">Frame h</label>
+                            <input type="number" class="form-control element" id="frame_h" value="260" onchange="animateCanvas()" aria-describedby="emailHelp">
+                            <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col mb-3 pb-3">
+                            <label for="exampleInputEmail1" class="form-label">Imagem de fundo</label>
+                            <input type="text" class="form-control element" id="background_image" value="fundo1.png" onchange="alterBackGround(this.value)" aria-describedby="emailHelp">
+                            <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
+                          </div>
+                          <div class="col mb-3 pb-3">
+                            <label for="exampleInputEmail1" class="form-label">Tamnho</label>
+                            <input type="number" class="form-control element" id="background_scale" value="1.25" onchange="animateCanvas()" aria-describedby="emailHelp">
+                            <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col mb-3 pb-3">
+                            <label for="exampleInputEmail1" class="form-label">Fundo qtd</label>
+                            <input type="number" class="form-control element" id="bg_qtd" value="20" onchange="animateCanvas()" aria-describedby="emailHelp">
+                            <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
+                          </div>
+                          <div class="col mb-3 pb-3">
+                            <label for="exampleInputEmail1" class="form-label">Fundo x</label>
+                            <input type="number" class="form-control element" id="bg_x" value="32" onchange="animateCanvas()" aria-describedby="emailHelp">
+                            <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
+                          </div>
+                          <div class="col mb-3 pb-3">
+                            <label for="exampleInputEmail1" class="form-label">Fundo y</label>
+                            <input type="number" class="form-control element" id="bg_y" value="0" onchange="animateCanvas()" aria-describedby="emailHelp">
+                            <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
           </div>
         </div>
       </div>
@@ -107,7 +300,6 @@
     <script src="assets/js/AnimaCanvas.js"></script>
     <script src="assets/js/Character.js"></script>
     <script src="assets/js/main.js"></script>
-    <!-- <script src="assets/js/script.js"></script> -->
-
+    <script src="assets/js/script.js"></script>
   </body>
 </html>

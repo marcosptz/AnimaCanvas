@@ -2,8 +2,33 @@
   height: 300px;
 }
 
+.btn-disabled {
+  background-color: transparent !important; 
+  color: rgba(0, 0, 255, 0) !important; 
+  border-color: rgba(0, 0, 255, 0) !important;
+  border-style: solid;
+}
+
+.bg-control {
+  background-color: #424040e7;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.3); /* Sombra para dar profundidade */
+}
+
 @media (min-width: 700px) {
   #box {
     height: 900px;
+  }
+}
+
+/* Exemplo: Estilos aplicados quando a tela tem 768px ou menos */
+@media screen and (max-width: 768px) {
+  html, body {
+    max-width: 100%;
+    height: auto;
+    overflow-x: hidden !important;
+  }
+  
+  #box {
+    height: auto;
   }
 }
