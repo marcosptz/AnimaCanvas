@@ -6,9 +6,6 @@ const main = (element, props={}) => {
     const imgPath = typeof props.imgPath == 'undefined' ? 'Canvas' : props.imgPath;
 
     const personage = new Character(element, props, name, imgPath);
-    // const personage2 = new Character(element, props, name, imgPath);
-
-    // personage.init();
 
     return personage;
 }
@@ -48,10 +45,14 @@ const createFrame2 = (qtd=1, intervalX=0, intervalY=0, w=0, h=0, x=true, y=true,
 
 const alterBackGround = (img='fundo1.png') => {
     animate.alterBackGround(`assets/img/${img}`);
+
+    background_image.value = img;
 }
 
 const alterCharacter = (img='img1.png') => {
     animate.alterCharacter(`assets/img/${img}`);
+
+    img_path.value = img;
 }
 
 const stop = () => {
@@ -117,37 +118,90 @@ const setProps = (props) => {
     animate.setProps(props);
 }
 
-const moveLeft = () => {
-    animate.moveLeft(25);
-
-    // setInterval(() => animate.moveLeft(), 500);
+const moveLeft = (type=0) => {
+    animate.moveLeft(25, type);
 }
 
-const moveRigth = () => {
-    animate.moveRigth(25);
-
-    console.log('teste...')
+const moveRigth = (type=0) => {
+    animate.moveRigth(25, type);
 }
 
-const moveUp = () => {
-    animate.moveUp(25);
+const moveUp = (type=0) => {
+    animate.moveUp(25, type);
 }
 
-const moveDn = () => {
-    animate.moveDn(25);
+const moveDn = (type=0) => {
+    animate.moveDn(25, type);
 }
 
-const speedUp = () => {
-    animate.speedUp();
+const speedUp = (type=0) => {
+    animate.speedUp(type);
 }
 
-const speedDn = () => {
-    animate.speedDn();
+const speedDn = (type=0) => {
+    animate.speedDn(type);
+}
+
+const setSpriteScale = (scale) => {
+  animate.setSpriteScale(scale);
+}
+
+const setBgScale = (scale) => {
+  animate.setBgScale(scale);
+  //animate.backgroundScale = scale;
 }
 
 const animateCanvas = (type=true) => {
     animate.setProps(getValues());
     animate.animate(type);
+}
+
+const speedometer = (id_element='', active=1) => {
+    let min = -90;
+    let max = 90;
+    let limit = 15;
+    let scale = (max-min)/limit;
+    let speeds = [];
+    let current_speed = 0;
+
+    for(let i=0; i < max; i++) {
+        speeds[i+1] = min += scale;
+    }
+
+    let interval = setInterval(() => {
+        current_speed = speeds[animate.speed];
+
+        document.querySelector(`#${id_element} .velocidade`).innerHTML = animate.speed;
+        document.querySelector(`#${id_element} .ponteiro`).style = `transform: rotate(${current_speed}deg)`;
+    }, 100);
+
+    if(active == 0) {clearInterval(interval); return}
+}
+
+const animateData = (el, type=0) => {
+  switch(type) {
+    case 1:
+        animate.setX(el.value);
+        break;
+    case 2:
+        animate.setY(el.value)
+        break;
+    case 3:
+        animate.setSpeed(el.value)
+        break;
+    case 4:
+        setSpriteScale(el.value)
+        break;
+    case 5:
+        let moveX = el.value == 0 ? false : true;
+        animate.setMoveX(moveX);
+        break;
+    case 6:
+        let moveY = el.value == 0 ? false : true;
+        animate.setMoveY(moveY)
+    default:
+        break;
+  }
 }
 
 const stopAnimate = () => {
@@ -157,6 +211,12 @@ const stopAnimate = () => {
 const resetAnimate = () => {
     animate.stop();
     animate.reset();
+}
+
+const loadFunction = () => {
+    setSelect('#alterChacter', 13);
+    setSelect('#alterBg', 18, 1);
+    speedometer('velocimetro');
 }
 
 // Passando o ID do elemento que está no seu index.html
@@ -263,10 +323,13 @@ const by = parseInt(bg_y.value);
 const type = true;
 const directionX = direction_x.value == 0 ? false : true;
 const directionY = direction_y.value == 0 ? false : true;
+const directionBgX = direction_bg_x.value == 0 ? false : true;
+const directionBgY = direction_bg_y.value == 0 ? false : true;
 const props = {
     scale: 4,
     overflow_x: 'hidden',
     //overflow_y: 'hidden',
+    // height_box: 'auto',
     name: 'Personagem 2',
     imgPath: `assets/img/${img_path.value}`,  // img_path.value
     x: parseInt(pos_x.value),
@@ -276,13 +339,10 @@ const props = {
     spriteScale: parseFloat(sprite_scale.value),
     backgroundScale: parseFloat(background_scale.value),
     backgroundImage: background_image.value == '' ? false : `assets/img/${background_image.value}`,
-    backgroundAnimation: background_image.value == '' ? [] : createFrame(b_qtd, bx, by, 0, 0, true, false),
+    backgroundAnimation: background_image.value == '' ? [] : createFrame(b_qtd, bx, by, 0, 0, directionBgX, directionBgY),
     moveX: move_x.value == 0 ? false : true,
     moveY: move_y.value == 0 ? false : true,
     animationFrames: createFrame(qtd, x, y, w, h, directionX, directionY),
 }
 
-setSelect('#alterChacter', 13);
-setSelect('#alterBg', 18, 1);
-
-const animate = main('box_canvas', props);
+let animate = main('box_canvas', props);

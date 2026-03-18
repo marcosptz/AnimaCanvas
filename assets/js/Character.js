@@ -87,7 +87,7 @@ class Character extends AnimaCanvas {
     }
 
     setProps(props=[]) {
-        for(let i in props) if(typeof this.props[i] != 'undefined') this.props[i] = props[i];
+      this.props = props;
     }
 
     setX(x) {
@@ -97,37 +97,141 @@ class Character extends AnimaCanvas {
     setY(y) {
         this.y = y;
     }
+    
+    setSpriteScale(scale) {
+      this.spriteScale = scale;
+    }
+    
+    setBgScale(scale) {
+      this.backgroundScale = scale;
+    }
 
     setSpeed(speed) {
         this.speed = speed < 1 ? 1 : speed;
     }
-
-    speedUp() {
-        if(this.speed <= 100) this.speed ++;
+    
+    setMoveX(moveX) {
+      this.moveX = moveX;
+    }
+    
+    setMoveY(moveY) {
+      this.moveY = moveY;
     }
 
-    speedDn() {
-        if(this.speed >= 1) this.speed --;
+    speedUp(type=0, limit=15, element=false) {
+        if(this.speed >= limit) {
+            clearInterval(this.intervalSpeed); 
+            return;
+        }
+
+        if(type == 0) {
+            clearInterval(this.intervalSpeed);
+            this.speed ++;
+        } else {
+            this.intervalSpeed = setInterval(() => {
+                this.speed ++;
+
+                if(element) document.querySelector(element).innerHTML = this.speed;
+
+                if(this.speed >= limit) clearInterval(this.intervalSpeed); 
+            }, 100);
+        }
+    }
+
+    speedDn(type=0, limit=1, element=false) {
+        if(this.speed <= limit) {
+            clearInterval(this.intervalSpeed); 
+            return;
+        }
+
+        if(type == 0) {
+            clearInterval(this.intervalSpeed);
+            this.speed --;
+        } else {
+            this.intervalSpeed = setInterval(() => {
+                this.speed --;
+
+                if(element) document.querySelector(element).innerHTML = this.speed;
+
+                if(this.speed <= limit) clearInterval(this.intervalSpeed); 
+            }, 100);
+        }
     }
 
     currentSpeed() {
         return this.speed;
     }
 
-    moveRigth(move=10) {
-        this.x += move;
+    moveRigth(move=10, type=0) {
+        let frameW = this.props.animationFrames[0].w;
+        let maxW = this.width + frameW;
+
+        if(this.x >= maxW) this.x = 0 - frameW;
+
+        if(type == 0) {
+            clearInterval(this.intervalMove);
+            this.x += move;
+        } else {
+            this.intervalMove = setInterval(() => {
+                this.x += move;
+
+                if(this.x >= maxW) this.x = 0 - frameW;
+            }, move*3);
+        }
     }
 
-    moveLeft(move=10) {
-        this.x -= move;
+    moveLeft(move=10, type=0) {
+        let frameW = this.props.animationFrames[0].w;
+        let minW = 0 - frameW;
+
+        if(this.x <= minW) this.x = this.width + frameW;
+
+        if(type == 0) {
+            clearInterval(this.intervalMove);
+            this.x -= move;
+        } else {
+            this.intervalMove = setInterval(() => {
+                this.x -= move;
+
+                if(this.x <= minW) this.x = this.width+frameW;
+            }, move*3);
+        }
     }
 
-    moveUp(move=10) {
-        this.y -= move;
+    moveUp(move=10, type=0) {
+        let frameH = this.props.animationFrames[0].h;
+        let maxH = 0 - frameH;
+
+        if(this.y <= maxH) this.y = this.height - maxH;
+
+        if(type == 0) {
+            clearInterval(this.intervalMove);
+            this.y -= move;
+        } else {
+            this.intervalMove = setInterval(() => {
+                this.y -= move;
+
+                if(this.y <= maxH) this.y = this.height - maxH;
+            }, move*3);
+        }
     }
 
-    moveDn(move=10) {
-        this.y += move;
+    moveDn(move=10, type=0) {
+        let frameH = this.props.animationFrames[0].h;
+        let maxH = this.height + frameH;
+
+        if(this.y >= maxH) this.y = 0 - maxH;
+
+        if(type == 0) {
+            clearInterval(this.intervalMove);
+            this.y += move;
+        } else {
+            this.intervalMove = setInterval(() => {
+                this.y += move;
+
+                if(this.y >= maxH) this.y = 0 - maxH;
+            }, move*3);
+        }
     }
 
     draw(x=0, y=0) {

@@ -11,6 +11,7 @@ class AnimaCanvas {  // Caso for exportar como módulo, usar "export default" an
         this.scl = typeof props.scale == 'undefined' ? 11.811 : props.scale;
         this.width = typeof props.width == 'undefined' ? this.scale(300) : this.scale(props.width);
 		this.height = typeof props.height == 'undefined' ? this.scale(210) : this.scale(props.height);
+		this.height_box = typeof props.height_box == 'undefined' ? '66vh' : props.height_box;
 		this.add_class = typeof props.add_class == 'undefined' ? '' : props.add_class;
 		this.overflow_x = typeof props.overflow_x == 'undefined' ? 'auto' : props.overflow_x;
 		this.overflow_y = typeof props.overflow_y == 'undefined' ? 'auto' : props.overflow_y;
@@ -28,7 +29,7 @@ class AnimaCanvas {  // Caso for exportar como módulo, usar "export default" an
 
 		// Configuração do Container (A "Mesa de Trabalho")
 		this.box.style.width = '100%';
-		this.box.style.height = '66vh';
+		this.box.style.height = this.height_box;
 		this.box.style.display = 'flex';
 		this.box.style.flexDirection = 'column';
 		this.box.style.alignItems = 'center'; 
