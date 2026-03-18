@@ -4,9 +4,13 @@ class Character extends AnimaCanvas {
         super(element, props);
         this.name = name;
         this.img = new Image();
-        this.img.src = imgPath;
+        this.imgSpeed = new Image();
         this.backgroundImg =  new Image();
+        this.backgroundBaseImg =  new Image();
+        this.img.src = imgPath;
+        this.imgSpeed.src = 'assets/img/speed.png';
         this.backgroundImg.src = typeof props.backgroundImage == 'undefined' ? '' : props.backgroundImage;
+        this.backgroundBaseImg.src = typeof props.backgroundBaseImg == 'undefined' ? '' : props.backgroundBaseImg;
         this.imageStatus = typeof props.backgroundImage == 'undefined' ? false : true;
         this.animationFrames = typeof props.animationFrames == 'undefined' ? [{x: 0, y: 0}] : props.animationFrames;
         this.animation = typeof props.animation == 'undefined' ? true : props.animation;  // Aiva a animação ao instanciar a classe, default é sempre ativa
@@ -23,6 +27,7 @@ class Character extends AnimaCanvas {
         this.moveX = typeof props.moveX == 'undefined' ? false : props.moveX;  // Adiciona movimento na horizontal
         this.moveY = typeof props.moveY == 'undefined' ? false : props.moveY;  // Adiciona movimento na vertical
         this.moveScale = typeof props.moveScale == 'undefined' ? 100 : props.moveScale;
+        this.animateOnload = typeof props.animateOnload == 'undefined' ? true : props.animateOnload;
         this.currentFrame = 0;
         this.currentBg = 0;
         this.move = 0;
@@ -31,12 +36,46 @@ class Character extends AnimaCanvas {
         this.currentCol = 0;
         this.currentLine = 0;
         this.moveLimit = (this.width/this.scl)*4;
-        this.img.onload = () => this.animate(this.animation);
+        this.img.onload = () => {
+            if(this.animateOnload) {
+                this.animate(this.animation);
+            } else {
+                this.addImage(this.backgroundBaseImg, 0, 0, this.width/this.scl, this.height/this.scl);
+            }
+        }
+        // this.img.onload = () => this.animate(this.animation);
+
+        // this.img.onload = () => this.addImage(this.backgroundImg, 0, 0, this.width/this.scl, this.height/this.scl)
 
         // Caso haja erro no caminho do arquivo
         this.img.onerror = () => {
             console.error('Erro ao carregar a imagem. Verifique o caminho em assets/img/');
         };
+    }
+
+    createObjFrame = (qtd=1, cols=1, lines=1, width=0, height=0, stepCol=0, stepLine=0) => {
+        const frame = [];
+        const marg_esq = 0;
+        const marg_sup = 0;
+        const horizontal_distance = 0;
+        const vertical_distance = 0;
+
+        // Define o limite total de iterações
+        const total = qtd || (cols * lines);
+
+        for (let i = 0; i < total; i++) {
+            // Calcula a coluna e a linha baseada no índice linear
+            // Somamos o step inicial para manter a lógica original
+            const colAtuaL = (i % cols) + stepCol; 
+            const linhaAtual = Math.floor(i / cols) + stepLine;
+
+            const x = marg_esq + (colAtuaL * (width + horizontal_distance));
+            const y = marg_sup + (linhaAtual * (height + vertical_distance));
+
+            frame.push({ x, y, w: width, h: height });
+        }
+
+        return frame;
     }
 
     addFrame(img='', x=0, y=0, cols=1, lines=1, speed=5, scale=1) {
@@ -263,12 +302,9 @@ class Character extends AnimaCanvas {
         // Pegamos os dados do frame atual do nosso mapa
         const f = this.animationFrames[this.currentFrame];
 
-
         // Desenhamos apenas o recorte definido no mapa
         this.ctx.drawImage(
             this.img,
-            // widthFrama*this.coluna, heightFrame*this.linha,
-            // widthFrama, heightFrame,
             f.x, f.y,  // Início do corte (X, Y)
             f.w, f.h,  // Tamanho do corte
             x, y,      // Onde desenhar no canvas (com dobro do tamanho)

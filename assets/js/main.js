@@ -10,7 +10,7 @@ const main = (element, props={}) => {
     return personage;
 }
 
-const createFrame = (qtd=1, intervalX=0, intervalY=0, w=0, h=0, x=true, y=true, step=0) => {
+const createFrame1 = (qtd=1, intervalX=0, intervalY=0, w=0, h=0, x=true, y=true, step=0) => {
   const frame = [];
   let countX = 0;
   let countY = 0;
@@ -26,7 +26,7 @@ const createFrame = (qtd=1, intervalX=0, intervalY=0, w=0, h=0, x=true, y=true, 
   return frame;
 }
 
-const createFrame2 = (qtd=1, intervalX=0, intervalY=0, w=0, h=0, x=true, y=true, step=0) => {
+const createFrame2 = (intervalX=0, intervalY=0, w=0, h=0, x=true, y=true, step=0) => {
   const frame = [];
   let countX = 0;
   let countY = 0;
@@ -41,6 +41,58 @@ const createFrame2 = (qtd=1, intervalX=0, intervalY=0, w=0, h=0, x=true, y=true,
   }
   
   return frame;
+}
+
+const createFrame3 = (qtd=1, cols=1, lines=1, width=0, height=0, stepCol=0, stepLine=0) => {
+    const frame = [];
+    let marg_esq = 0;
+    let marg_sup = 0;
+    let horizontal_distance = 0;
+    let vertical_distance = 0;
+    let count = 0;
+
+    // Se  for passado a quantidade como false ou como 0, utiliza quantidade de colunas X linhas
+    if(!qtd) qtd = cols*lines;
+
+    for(let l=stepLine; l < lines; l++) {  // Qtd de linhas
+        for(let i=stepCol; i < cols; i++) {  // Qtd de colunaas
+            if(count == qtd) return frame;  // Define a quantidade independente da quantidade de colunas e linhas
+
+            const x = marg_esq + (i * (width + horizontal_distance));
+            const y = marg_sup + (l * (height + vertical_distance));
+
+            frame.push({x, y, w: width, h: height});
+
+            count++;
+        }
+    }
+  
+  return frame;
+}
+
+const createObjFrame = (qtd=1, cols=1, lines=1, width=0, height=0, stepCol=0, stepLine=0) => {
+    const frame = [];
+    const marg_esq = 0;
+    const marg_sup = 0;
+    const horizontal_distance = 0;
+    const vertical_distance = 0;
+
+    // Define o limite total de iterações
+    const total = qtd || (cols * lines);
+
+    for (let i = 0; i < total; i++) {
+        // Calcula a coluna e a linha baseada no índice linear
+        // Somamos o step inicial para manter a lógica original
+        const colAtuaL = (i % cols) + stepCol; 
+        const linhaAtual = Math.floor(i / cols) + stepLine;
+
+        const x = marg_esq + (colAtuaL * (width + horizontal_distance));
+        const y = marg_sup + (linhaAtual * (height + vertical_distance));
+
+        frame.push({ x, y, w: width, h: height });
+    }
+
+    return frame;
 }
 
 const alterBackGround = (img='fundo1.png') => {
@@ -92,10 +144,12 @@ const getValues = () => {
         spriteScale: parseFloat(sprite_scale.value),
         backgroundScale: parseFloat(background_scale.value),
         backgroundImage: background_image.value == '' ? false : `assets/img/${background_image.value}`,
-        backgroundAnimation: background_image.value == '' ? [] : createFrame(b_qtd, bx, by, 0, 0, true, false),
+        backgroundAnimation: background_image.value == '' ? [] : createObjFrame(b_qtd, bx, by, 32),
+        // backgroundAnimation: background_image.value == '' ? [] : createFrame1(b_qtd, bx, by, 0, 0, true, false),
         moveX: move_x.value == 0 ? false : true,
         moveY: move_y.value == 0 ? false : true,
-        animationFrames: createFrame(qtd, x, y, w, h, directionX, directionY),
+        animationFrames: createObjFrame(qtd, x, y, w, h),
+        // animationFrames: createFrame1(qtd, x, y, w, h, directionX, directionY),
     }
     
     return props;
@@ -219,7 +273,7 @@ isMobile = () => {
 
 
 const loadFunction = () => {
-    setSelect('#alterChacter', 13);
+    setSelect('#alterChacter', 20);
     setSelect('#alterBg', 18, 1);
     speedometer('velocimetro');
 }
@@ -253,32 +307,26 @@ const frame2 = [
     { x: 360,  y: 50, w: 50, h: 50 }, // Parado 3
 ];
 
-const frames1 = { 
-    frame1: [
-        { x: 0,   y: 25, w: 500, h: 280 }, // Parado 1
-        { x: 0,  y: 280, w: 500, h: 280 }, // Parado 2
-        { x: 0,  y: 540, w: 500, h: 280 }, // Parado 3
-        { x: 0, y: 800, w: 500, h: 280 },  // Início do passo
-        { x: 0, y: 1080, w: 500, h: 280 },  // Início do passo
-        { x: 0, y: 1360, w: 500, h: 280 },  // Início do passo
-        { x: 0, y: 1640, w: 500, h: 280 },  // Início do passo
-        { x: 0, y: 1920, w: 500, h: 280 },  // Início do passo
-        // { x: 500, y: 25, w: 500, h: 280 },  // Início do passo
-        // { x: 500, y: 280, w: 500, h: 280 },  // Início do passo
-        // { x: 500, y: 540, w: 500, h: 280 },  // Início do passo
-        // { x: 500, y: 800, w: 500, h: 280 },  // Início do passo
-    ],
-    frame2: [
-        { x: 2,   y: 10, w: 30, h: 40 }, // Parado 1
-        { x: 35,  y: 10, w: 30, h: 40 }, // Parado 2
-        { x: 70,  y: 10, w: 30, h: 40 }, // Parado 3
-        { x: 105, y: 10, w: 35, h: 40 },  // Início do passo
-        { x: 500, y: 25, w: 500, h: 280 },  // Início do passo
-        { x: 500, y: 280, w: 500, h: 280 },  // Início do passo
-        { x: 500, y: 540, w: 500, h: 280 },  // Início do passo
-        { x: 500, y: 800, w: 500, h: 280 },  // Início do passo
-    ],
-};
+const frame3 = [
+    { x: 100,  y: 50, w:280, h: 125 },
+    { x: 440,  y: 50, w: 280, h: 125 },
+    { x: 880,  y: 50, w: 280, h: 125 },
+    { x: 100,  y: 190, w: 260, h: 125 },
+    { x: 460,  y: 190, w: 260, h: 125 },
+    { x: 880,  y: 175, w: 280, h: 125 },
+    { x: 100,  y: 300, w: 280, h: 125 },
+    { x: 440,  y: 300, w: 280, h: 125 },
+    { x: 880,  y: 300, w: 280, h: 125 },
+    { x: 100,  y: 425, w: 280, h: 125 },
+    { x: 440,  y: 425, w: 280, h: 125 },
+    { x: 880,  y: 425, w: 280, h: 125 },
+    { x: 100,  y: 550, w: 280, h: 125 },
+    { x: 440,  y: 550, w: 280, h: 125 },
+    { x: 880,  y: 550, w: 280, h: 125 },
+    { x: 100,  y: 675, w: 280, h: 125 },
+    { x: 440,  y: 675, w: 280, h: 125 },
+    { x: 880,  y: 675, w: 280, h: 125 },
+];
 
 const setSelect = (element='', qtd=0, type=0) => {
     let options = '';
@@ -325,6 +373,8 @@ const h = parseFloat(frame_h.value);
 const b_qtd = parseInt(bg_qtd.value);
 const bx = parseInt(bg_x.value);
 const by = parseInt(bg_y.value);
+const bg_w = parseInt(bg_width.value);
+const bg_h = parseInt(bg_height.value);
 const type = true;
 const directionX = direction_x.value == 0 ? false : true;
 const directionY = direction_y.value == 0 ? false : true;
@@ -336,18 +386,23 @@ const props = {
     //overflow_y: 'hidden',
     height_box: isMobile() ? 'auto' : '66vh',
     name: 'Personagem 2',
+    // imgPath: `assets/img/img7.png`,  // img_path.value
     imgPath: `assets/img/${img_path.value}`,  // img_path.value
     x: parseInt(pos_x.value),
     y: parseInt(pos_y.value),
     speed: parseInt(speed.value),
     animation: type == 0 ? false : true,
     spriteScale: parseFloat(sprite_scale.value),
+    animateOnload: false,
+    backgroundBaseImg: `assets/img/imgBgBase.png`,
     backgroundScale: parseFloat(background_scale.value),
     backgroundImage: background_image.value == '' ? false : `assets/img/${background_image.value}`,
-    backgroundAnimation: background_image.value == '' ? [] : createFrame(b_qtd, bx, by, 0, 0, directionBgX, directionBgY),
+    backgroundAnimation: background_image.value == '' ? [] : createObjFrame(b_qtd, bx, by, bg_w, bg_h),
+    // backgroundAnimation: background_image.value == '' ? [] : createFrame1(b_qtd, bx, by, 0, 0, directionBgX, directionBgY),
     moveX: move_x.value == 0 ? false : true,
     moveY: move_y.value == 0 ? false : true,
-    animationFrames: createFrame(qtd, x, y, w, h, directionX, directionY),
+    animationFrames: createObjFrame(qtd, x, y, w, h),
+    // animationFrames: createFrame1(qtd, x, y, w, h, directionX, directionY),
 }
 
 let animate = main('box_canvas', props);
