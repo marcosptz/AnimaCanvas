@@ -213,6 +213,11 @@ const resetAnimate = () => {
     animate.reset();
 }
 
+isMobile = () => {
+    return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+
+
 const loadFunction = () => {
     setSelect('#alterChacter', 13);
     setSelect('#alterBg', 18, 1);
@@ -329,7 +334,7 @@ const props = {
     scale: 4,
     overflow_x: 'hidden',
     //overflow_y: 'hidden',
-    // height_box: 'auto',
+    height_box: isMobile() ? 'auto' : '66vh',
     name: 'Personagem 2',
     imgPath: `assets/img/${img_path.value}`,  // img_path.value
     x: parseInt(pos_x.value),
