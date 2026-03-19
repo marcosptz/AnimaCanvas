@@ -56,6 +56,11 @@ function drop(ev) {
   ev.target.appendChild(document.getElementById(data));
 }
 
+// document.addEventListener('keydown', function(evento) {
+//   console.log('teste:', evento.keyCode)
+// });
+
+
 
 // const botao = document.getElementById('meuBotao');
 

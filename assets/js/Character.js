@@ -43,6 +43,13 @@ class Character extends AnimaCanvas {
                 this.addImage(this.backgroundBaseImg, 0, 0, this.width/this.scl, this.height/this.scl);
             }
         }
+
+        // document.addEventListener('keydown', function(evento) {
+        //     this.eventKeyCode = evento.keyCode;  // r=37 | l=39 | up=38 | dn=40 | espaço=32 | ctrl=17 | alt=18 | altgr=225
+
+        //     this.btnAction(evento.keyCode);
+        //     console.log('teste:', this.eventKeyCode)
+        // });
         // this.img.onload = () => this.animate(this.animation);
 
         // this.img.onload = () => this.addImage(this.backgroundImg, 0, 0, this.width/this.scl, this.height/this.scl)
@@ -76,6 +83,49 @@ class Character extends AnimaCanvas {
         }
 
         return frame;
+    }
+
+    btnAction(key) {
+        switch(key) {
+            case 65:  // Ctrl - Reproduz um frame por vez ao clicar
+                this.animate(false);
+                break;
+            case 68:  // AltGr - Volta a reproduzir normal
+                this.animate();
+                break;
+            case 83:  // Alt - Reduz a velocidade
+                this.speedDn();
+                break;
+            case 87:  // Espaço - Aumenta a velocidade
+                this.speedUp();
+                break;
+            case 37:  // Direito - Move para direita
+                this.moveLeft();
+                break;
+            case 38:  // Para cima - Move para cima
+                this.moveUp()
+                break;
+            case 39:  // Esquerdo - Move para esquerda
+                this.moveRigth();
+                break;
+            case 40:  // Para baixo - Move para baixo
+                this.moveDn();
+                break;
+            case 98:  // Diminuir a imagem de fundo
+                this.setBgScale(animate.backgroundScale - 0.1);
+                break;
+            case 104:  // Aumentar a imagem de fundo
+                this.setBgScale(animate.backgroundScale + 0.1);
+                break;
+            case 107:  // Aumentar a imagem do sprite
+                this.setSpriteScale(animate.spriteScale + 0.1);
+                break;
+            case 109:  // Diminuir a imagem do sprite
+                this.setSpriteScale(animate.spriteScale - 0.1);
+                break;
+            default:
+                break;
+        }
     }
 
     addFrame(img='', x=0, y=0, cols=1, lines=1, speed=5, scale=1) {
@@ -170,7 +220,7 @@ class Character extends AnimaCanvas {
             this.intervalSpeed = setInterval(() => {
                 this.speed ++;
 
-                if(element) document.querySelector(element).innerHTML = this.speed;
+                // if(element) document.querySelector(element).innerHTML = this.speed;
 
                 if(this.speed >= limit) clearInterval(this.intervalSpeed); 
             }, 100);
@@ -190,7 +240,7 @@ class Character extends AnimaCanvas {
             this.intervalSpeed = setInterval(() => {
                 this.speed --;
 
-                if(element) document.querySelector(element).innerHTML = this.speed;
+                // if(element) document.querySelector(element).innerHTML = this.speed;
 
                 if(this.speed <= limit) clearInterval(this.intervalSpeed); 
             }, 100);

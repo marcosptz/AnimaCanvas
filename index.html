@@ -84,6 +84,30 @@
               </div>
             </div>
           </div>
+          <div class="col-lg-2 col-md-8 mx-auto">
+            <div class="row ms-1 pb-3 position-relative">
+              <div class="col-lg-12 col-12">
+                <label for="referencia" class="form-label"><span>Tamanho da imagem</span></label>
+                <div class="input-group">
+                  <a class="btn btn-secondary input-group-text" onclick="setSpriteScale(1, 2)"><i class="bi bi-dash"></i></a>
+                  <input type="text" class="form-control" id="sprite_sacale" value="1" onchange="setSpriteScale(this.value)" maxlength="50">
+                  <a class="btn btn-success input-group-text" onclick="setSpriteScale(1, 1)"><i class="bi bi-plus"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-8 mx-auto">
+            <div class="row ms-1 pb-3 position-relative">
+              <div class="col-lg-12 col-12">
+                <label for="referencia" class="form-label"><span>Tamanho do fundo</span></label>
+                <div class="input-group">
+                  <a class="btn btn-secondary input-group-text" onclick="setBgScale(0, 2)"><i class="bi bi-dash"></i></a>
+                  <input type="text" class="form-control" id="bg_scale" value="1" onchange="setBgScale(this.value)" maxlength="50">
+                  <a class="btn btn-success input-group-text" onclick="setBgScale(1, 1)"><i class="bi bi-plus"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -169,7 +193,7 @@
                         </div>
                         <div class="col mb-3 pb-3">
                           <label for="exampleInputEmail1" class="form-label">Pasição y</label>
-                          <input type="number" class="form-control element" id="pos_y" value="530" onchange="animateData(this, 2)" aria-describedby="emailHelp">
+                          <input type="number" class="form-control element" id="pos_y" value="470" onchange="animateData(this, 2)" aria-describedby="emailHelp">
                           <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
                         </div>
                       </div>
@@ -259,7 +283,7 @@
                         <div class="row">
                           <div class="col mb-3 pb-3">
                             <label for="exampleInputEmail1" class="form-label">Imagem de fundo</label>
-                            <input type="text" class="form-control element" id="background_image" value="fundo1.png" onchange="alterBackGround(this.value)" aria-describedby="emailHelp">
+                            <input type="text" class="form-control element" id="background_image" value="fundo13.png" onchange="alterBackGround(this.value)" aria-describedby="emailHelp">
                             <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
                           </div>
                           <div class="col mb-3 pb-3">
@@ -306,7 +330,7 @@
                         <div class="row">
                           <div class="col mb-3 pb-3">
                             <label for="exampleInputEmail1" class="form-label">Fundo largura</label>
-                            <input type="number" class="form-control element" id="bg_width" value="32" onchange="updateData()" aria-describedby="emailHelp">
+                            <input type="number" class="form-control element" id="bg_width" value="30" onchange="updateData()" aria-describedby="emailHelp">
                             <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
                           </div>
                           <div class="col mb-3 pb-3">

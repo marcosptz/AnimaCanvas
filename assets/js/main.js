@@ -196,13 +196,20 @@ const speedDn = (type=0) => {
     animate.speedDn(type);
 }
 
-const setSpriteScale = (scale) => {
-  animate.setSpriteScale(scale);
+const setSpriteScale = (scale, type=0) => {
+    if(type == 0)animate.setSpriteScale(scale);
+    if(type == 1) animate.setSpriteScale(animate.spriteScale + 0.1);
+    if(type == 2) animate.setSpriteScale(animate.spriteScale - 0.1);
+
+    sprite_sacale.value = animate.spriteScale.toFixed(2);
 }
 
-const setBgScale = (scale) => {
-  animate.setBgScale(scale);
-  //animate.backgroundScale = scale;
+const setBgScale = (scale, type=0) => {
+  if(type == 0) animate.setBgScale(scale);
+  if(type == 1) animate.setBgScale(animate.backgroundScale + 0.1);
+  if(type == 2) animate.setBgScale(animate.backgroundScale - 0.1);
+
+  bg_scale.value = animate.backgroundScale.toFixed(2);
 }
 
 const animateCanvas = (type=true) => {
@@ -273,8 +280,8 @@ isMobile = () => {
 
 
 const loadFunction = () => {
-    setSelect('#alterChacter', 20);
-    setSelect('#alterBg', 18, 1);
+    setSelect('#alterChacter', 22);
+    setSelect('#alterBg', 18, 1, 13);
     speedometer('velocimetro');
 }
 
@@ -328,12 +335,14 @@ const frame3 = [
     { x: 880,  y: 675, w: 280, h: 125 },
 ];
 
-const setSelect = (element='', qtd=0, type=0) => {
+const setSelect = (element='', qtd=0, type=0, val=1) => {
     let options = '';
-    let text = type == 0 ? 'img' : 'fundo'
+    let text = type == 0 ? 'img' : 'fundo';
+    let selected = '';
 
     for(let i = 0; i < qtd; i++) {
-        options += `<option value="${text + (i+1)}.png">${text + (i+1)}</option>`;
+        selected = val == i+1 ? 'selected' : '';
+        options += `<option value="${text + (i+1)}.png" ${selected}>${text + (i+1)}</option>`;
     }
 
     document.querySelector(element).innerHTML = options;
@@ -406,3 +415,12 @@ const props = {
 }
 
 let animate = main('box_canvas', props);
+
+document.addEventListener('keydown', function(evento) {
+    // r=37 | l=39 | up=38 | dn=40 | espaço=32 | ctrl=17 | alt=18 | altgr=225
+    if(evento.keyCode == 37 || evento.keyCode == 38 || evento.keyCode == 39 || evento.keyCode == 40) evento.preventDefault();
+    // this.eventKeyCode = evento.keyCode;  // r=37 | l=39 | up=38 | dn=40 | espaço=32 | ctrl=17 | alt=18 | altgr=225
+
+    animate.btnAction(evento.keyCode);
+    // console.log('teste:', evento.keyCode)
+});
