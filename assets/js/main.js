@@ -43,7 +43,7 @@ const createFrame2 = (intervalX=0, intervalY=0, w=0, h=0, x=true, y=true, step=0
   return frame;
 }
 
-const createFrame3 = (qtd=1, cols=1, lines=1, width=0, height=0, stepCol=0, stepLine=0) => {
+const createFrame = (qtd=1, cols=1, lines=1, width=0, height=0, stepCol=0, stepLine=0) => {
     const frame = [];
     let marg_esq = 0;
     let marg_sup = 0;
@@ -70,7 +70,7 @@ const createFrame3 = (qtd=1, cols=1, lines=1, width=0, height=0, stepCol=0, step
   return frame;
 }
 
-const createObjFrame = (qtd=1, cols=1, lines=1, width=0, height=0, stepCol=0, stepLine=0) => {
+const createObjFrame = (qtd=1, cols=1, lines=1, width=0, height=0, jump=0) => {
     const frame = [];
     const marg_esq = 0;
     const marg_sup = 0;
@@ -83,13 +83,13 @@ const createObjFrame = (qtd=1, cols=1, lines=1, width=0, height=0, stepCol=0, st
     for (let i = 0; i < total; i++) {
         // Calcula a coluna e a linha baseada no índice linear
         // Somamos o step inicial para manter a lógica original
-        const colAtuaL = (i % cols) + stepCol; 
-        const linhaAtual = Math.floor(i / cols) + stepLine;
+        const colAtuaL = (i % cols); 
+        const linhaAtual = Math.floor(i / cols);
 
         const x = marg_esq + (colAtuaL * (width + horizontal_distance));
         const y = marg_sup + (linhaAtual * (height + vertical_distance));
 
-        frame.push({ x, y, w: width, h: height });
+        if(i >= jump) frame.push({ x, y, w: width, h: height });
     }
 
     return frame;
@@ -102,7 +102,9 @@ const alterBackGround = (img='fundo1.png') => {
 }
 
 const alterCharacter = (img='img1.png') => {
-    animate.alterCharacter(`assets/img/${img}`);
+    props[img].imgPath = `assets/img/${img}`;
+
+    animate = main('box_canvas', props[img]);
 
     img_path.value = img;
 }
@@ -145,11 +147,9 @@ const getValues = () => {
         backgroundScale: parseFloat(background_scale.value),
         backgroundImage: background_image.value == '' ? false : `assets/img/${background_image.value}`,
         backgroundAnimation: background_image.value == '' ? [] : createObjFrame(b_qtd, bx, by, 32),
-        // backgroundAnimation: background_image.value == '' ? [] : createFrame1(b_qtd, bx, by, 0, 0, true, false),
         moveX: move_x.value == 0 ? false : true,
         moveY: move_y.value == 0 ? false : true,
         animationFrames: createObjFrame(qtd, x, y, w, h),
-        // animationFrames: createFrame1(qtd, x, y, w, h, directionX, directionY),
     }
     
     return props;
@@ -201,7 +201,7 @@ const setSpriteScale = (scale, type=0) => {
     if(type == 1) animate.setSpriteScale(animate.spriteScale + 0.1);
     if(type == 2) animate.setSpriteScale(animate.spriteScale - 0.1);
 
-    sprite_sacale.value = animate.spriteScale.toFixed(2);
+    sprite_sacale.value = animate.spriteScale;  // .toFixed(2);
 }
 
 const setBgScale = (scale, type=0) => {
@@ -209,7 +209,7 @@ const setBgScale = (scale, type=0) => {
   if(type == 1) animate.setBgScale(animate.backgroundScale + 0.1);
   if(type == 2) animate.setBgScale(animate.backgroundScale - 0.1);
 
-  bg_scale.value = animate.backgroundScale.toFixed(2);
+  bg_scale.value = animate.backgroundScale;  // .toFixed(2);
 }
 
 const animateCanvas = (type=true) => {
@@ -280,7 +280,7 @@ isMobile = () => {
 
 
 const loadFunction = () => {
-    setSelect('#alterChacter', 22);
+    setSelect('#alter_chacter', 25);
     setSelect('#alterBg', 18, 1, 13);
     speedometer('velocimetro');
 }
@@ -348,79 +348,81 @@ const setSelect = (element='', qtd=0, type=0, val=1) => {
     document.querySelector(element).innerHTML = options;
 }
 
-const prorpsSonic = {
-    scale: 4,
-    name: 'Personagem 1',
-    imgPath: 'assets/img/img4.png',
-    x: 0,
-    y: 500,
-    speed: 5,
-    // animation: false,
-    spriteScale: 5,
-    backgroundImage: 'assets/img/fundo1.png',
-    animationFrames: frame2,
-}
-
-const prorpsOnca = {
-    scale: 4,
-    name: 'Personagem 1',
-    imgPath: 'assets/img/img3.png',
-    x: 0,
-    y: 500,
-    speed: 4,
-    // animation: false,
-    spriteScale: 0.95,
-    backgroundImage: 'assets/img/fundo2.png',
-    animationFrames,
-}
-
-const qtd = parseInt(qtd_frames.value);
-const x = parseFloat(frame_x.value);
-const y = parseFloat(frame_y.value);
-const w = parseFloat(frame_w.value);
-const h = parseFloat(frame_h.value);
-const b_qtd = parseInt(bg_qtd.value);
-const bx = parseInt(bg_x.value);
-const by = parseInt(bg_y.value);
-const bg_w = parseInt(bg_width.value);
-const bg_h = parseInt(bg_height.value);
-const type = true;
-const directionX = direction_x.value == 0 ? false : true;
-const directionY = direction_y.value == 0 ? false : true;
-const directionBgX = direction_bg_x.value == 0 ? false : true;
-const directionBgY = direction_bg_y.value == 0 ? false : true;
-const props = {
+const propsBase = {
     scale: 4,
     overflow_x: 'hidden',
-    //overflow_y: 'hidden',
+    overflow_y: 'auto',
     height_box: isMobile() ? 'auto' : '66vh',
-    name: 'Personagem 2',
-    // imgPath: `assets/img/img7.png`,  // img_path.value
-    imgPath: `assets/img/${img_path.value}`,  // img_path.value
+    name: 'Personagem 1',
+    imgPath: `assets/img/${img_path.value}`,
     x: parseInt(pos_x.value),
     y: parseInt(pos_y.value),
     speed: parseInt(speed.value),
-    animation: type == 0 ? false : true,
+    animation: true,
     spriteScale: parseFloat(sprite_scale.value),
-    animateOnload: false,
+    animateOnload: true,
     backgroundBaseImg: `assets/img/imgBgBase.png`,
     backgroundScale: parseFloat(background_scale.value),
-    backgroundImage: background_image.value == '' ? false : `assets/img/${background_image.value}`,
-    backgroundAnimation: background_image.value == '' ? [] : createObjFrame(b_qtd, bx, by, bg_w, bg_h),
-    // backgroundAnimation: background_image.value == '' ? [] : createFrame1(b_qtd, bx, by, 0, 0, directionBgX, directionBgY),
-    moveX: move_x.value == 0 ? false : true,
-    moveY: move_y.value == 0 ? false : true,
-    animationFrames: createObjFrame(qtd, x, y, w, h),
-    // animationFrames: createFrame1(qtd, x, y, w, h, directionX, directionY),
+    backgroundImage: `assets/img/fundo13.png`,
+    backgroundAnimation: createObjFrame(0, 20, 1, 30, 0),
+    moveX: false,
+    moveY: false,
+    animationFrames: createObjFrame(0, 2, 4, 500, 260),
 }
 
-let animate = main('box_canvas', props);
+const onca = {...propsBase};
+onca.animationFrames = createObjFrame(0, 2, 4, 500, 260);
+onca.spriteScale = 0.95;
+onca.speed = 7;
+onca.x = 300;
+onca.y = 475;
+
+const aguia = {...propsBase};
+aguia.animationFrames = createObjFrame(0, 3, 3, 350, 350);
+aguia.spriteScale = 0.8;
+aguia.x = 400;
+aguia.y = 100;
+
+const arara = {...propsBase};
+arara.animationFrames = createObjFrame(0, 3, 3, 100, 100);
+arara.spriteScale = 1.1;
+arara.x = 400;
+arara.y = 100;
+
+const sonic = {...propsBase};
+sonic.animationFrames = createObjFrame(16, 8, 8, 51, 50, 8);
+sonic.spriteScale = 4;
+sonic.x = 500;
+sonic.y = 520;
+
+const boneco = {...propsBase};
+boneco.animationFrames = createObjFrame(0, 4, 2, 120, 130);
+boneco.spriteScale = 2.5;
+boneco.x = 400;
+boneco.y = 410;
+
+const props = {}
+
+props['img1.png'] = onca;
+props['img2.png'] = onca;
+props['img3.png'] = onca;
+props['img4.png'] = onca;
+props['img5.png'] = onca;
+props['img6.png'] = onca;
+props['img10.png'] = sonic;
+props['img11.png'] = boneco;
+props['img15.png'] = arara;
+props['img19.png'] = aguia;
+props['img20.png'] = aguia;
+props['img21.png'] = aguia;
+props['img22.png'] = aguia;
+
+let animate = main('box_canvas', props[img_path.value]);
 
 document.addEventListener('keydown', function(evento) {
     // r=37 | l=39 | up=38 | dn=40 | espaço=32 | ctrl=17 | alt=18 | altgr=225
     if(evento.keyCode == 37 || evento.keyCode == 38 || evento.keyCode == 39 || evento.keyCode == 40) evento.preventDefault();
-    // this.eventKeyCode = evento.keyCode;  // r=37 | l=39 | up=38 | dn=40 | espaço=32 | ctrl=17 | alt=18 | altgr=225
 
     animate.btnAction(evento.keyCode);
-    // console.log('teste:', evento.keyCode)
+    // console.log('keyCode:', evento.keyCode)
 });

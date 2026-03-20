@@ -428,10 +428,19 @@ class AnimaCanvas {  // Caso for exportar como módulo, usar "export default" an
 	}
 
     /**
-	 * Método que limpa a área do canvas
+	 * Método que limpa a área do canvas, possível passar as cordenadas da área a ser limpada
+	 * @param {float} x Define a posição x onde inicia a aŕea a ser limpada
+	 * @param {float} y Define a posição y onde inicia a aŕea a ser limpada
+	 * @param {float} w Define a largura da área que será limpa
+	 * @param {float} h Define a altura da área que será limpa
 	 */
-	clear() {
-  		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+	clear(x=0, y=0, w=this.canvas.width, h=this.canvas.height) {
+		x = this.scale(x);
+		y = this.scale(y);
+		w = this.scale(w) + this.scl;
+		h = this.scale(h) + this.scl;
+
+  		this.ctx.clearRect(x, y, w, h);
   	}
 
 	/**
