@@ -62,7 +62,7 @@
                 <label for="referencia" class="form-label"><span>Zoom</span></label>
                 <div class="input-group">
                   <a class="btn btn-secondary input-group-text" onclick="addZoom(0)"><i class="bi bi-dash"></i></a>
-                  <input type="text" class="form-control" id="zoom" value="1" onchange="addZoom(2)" maxlength="50">
+                  <input type="text" class="form-control element" id="zoom" value="1" onchange="addZoom(2)" maxlength="50">
                   <a class="btn btn-success input-group-text" onclick="addZoom(1)"><i class="bi bi-plus"></i></a>
                 </div>
               </div>
@@ -72,7 +72,7 @@
             <div class="row ms-1 pb-3 position-relative">
               <div class="col-lg-12 col-12">
                 <label for="referencia" class="form-label"><span>Alterar personegem</span></label>
-                <select id="alter_chacter" class="form-control" onchange="alterCharacter(this.value)"></select>
+                <select id="alter_chacter" class="form-control element" onchange="alterCharacter(this.value)"></select>
               </div>
             </div>
           </div>
@@ -80,7 +80,7 @@
             <div class="row ms-1 pb-3 position-relative">
               <div class="col-lg-12 col-12">
                 <label for="referencia" class="form-label"><span>Alterar Cenário</span></label>
-                <select id="alterBg" class="form-control" onchange="alterBackGround(this.value)"></select>
+                <select id="alterBg" class="form-control element" onchange="alterBackGround(this.value)"></select>
               </div>
             </div>
           </div>
@@ -90,7 +90,7 @@
                 <label for="referencia" class="form-label"><span>Tamanho da imagem</span></label>
                 <div class="input-group">
                   <a class="btn btn-secondary input-group-text" onclick="setSpriteScale(1, 2)"><i class="bi bi-dash"></i></a>
-                  <input type="text" class="form-control" id="sprite_sacale" value="1" onchange="setSpriteScale(this.value)" maxlength="50">
+                  <input type="text" class="form-control element" id="sprite_sacale" value="1" onchange="setSpriteScale(this.value)" maxlength="50">
                   <a class="btn btn-success input-group-text" onclick="setSpriteScale(1, 1)"><i class="bi bi-plus"></i></a>
                 </div>
               </div>
@@ -102,7 +102,7 @@
                 <label for="referencia" class="form-label"><span>Tamanho do fundo</span></label>
                 <div class="input-group">
                   <a class="btn btn-secondary input-group-text" onclick="setBgScale(0, 2)"><i class="bi bi-dash"></i></a>
-                  <input type="text" class="form-control" id="bg_scale" value="1" onchange="setBgScale(this.value)" maxlength="50">
+                  <input type="text" class="form-control element" id="bg_scale" value="1" onchange="setBgScale(this.value)" maxlength="50">
                   <a class="btn btn-success input-group-text" onclick="setBgScale(1, 1)"><i class="bi bi-plus"></i></a>
                 </div>
               </div>
@@ -137,10 +137,9 @@
                 </div>
                 <div class="row">
                   <div class="col">
-                    <input hidden id="pause_value" type="number" value="0">
                     <div class="btn-group" role="group" aria-label="Basic mixed styles example">
                       <button type="button" class="btn btn-primary btn-lg rounded me-1" onclick="moveLeft()" onmousedown="moveLeft(25, 1)"><i class="bi bi-arrow-left-circle-fill"></i></button>
-                      <button type="button" class="btn btn-warning btn-lg rounded" onclick="stop()"><i class="bi bi-pause-circle-fill"></i></button>
+                      <button type="button" class="btn btn-warning btn-lg rounded" onclick="pause()"><i class="bi bi-pause-circle-fill"></i></button>
                       <button type="button" class="btn btn-primary rounded btn-lg mx-1" onclick="moveRigth()" onmousedown="moveRigth(25, 1)"><i class="bi bi-arrow-right-circle-fill"></i></button>
                     </div>
                   </div>
@@ -167,6 +166,14 @@
                 <div class="row">
                   <div class="col">
                     <div class="btn-group mt-5 mb-0" role="group" aria-label="Basic mixed styles example">
+                      <button type="button" class="btn btn-secondary" onclick="reverse()"><i class="bi bi-skip-backward"></i></button>
+                      <button type="button" class="btn btn-success" onclick="reverse(false)"><i class="bi bi-play"></i></button>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="btn-group mt-5 mb-0" role="group" aria-label="Basic mixed styles example">
                       <button type="button" class="btn btn-warning" onclick="stop()"><i class="bi bi-x-lg"></i></button>
                       <button type="button" class="btn btn-primary" onclick="stop()"><i class="bi bi-house-door-fill"></i></button>
                       <button type="button" class="btn btn-secondary" onclick="moveLeft()"><i class="bi bi-gear-fill"></i></button>
@@ -176,23 +183,61 @@
                 </div>
               </div>
               <p class="d-inline-flex gap-1">
-                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTable" aria-expanded="false" aria-controls="collapseTable">
+                  Lista
+                </button>
+              </p>
+              <p class="d-inline-flex gap-1">
+                <button class="btn btn-primary" id="btn_config" type="button" data-bs-toggle="collapse" data-bs-target="#collapseConfig" aria-expanded="false" aria-controls="collapseConfig">
                   Configuração
                 </button>
               </p>
-              <div class="collapse mb-3" id="collapseExample">
+              <div class="collapse mb-3" id="collapseTable">
                 <div class="card card-body">
-                  <form class="py-3 border-bottom" id="form_canvas">
+                  <table class="table table-striped table-hover" id="dataListBg">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Id</th>
+                        <th>Nome</th>
+                        <th>Personagem</th>
+                        <th>Cenário</th>
+                        <th>Cols Personagem</th>
+                        <th>Linhas Personagem</th>
+                        <th>Cols Cernário</th>
+                        <th>Linhas Cenário</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="collapse mb-3" id="collapseConfig">
+                <div class="card card-body">
+                  <form class="py-3" id="form_canvas">
                     <input hidden type="number" id="qtd_linhas" value=0>
                     <div class="container-fluid">
                       <div class="row">
                         <div class="col mb-3 pb-3">
-                          <label for="exampleInputEmail1" class="form-label">Pasição x</label>
+                          <label for="exampleInputEmail1" class="form-label">Id</label>
+                          <input type="number" class="form-control element" id="id" value="0" onchange="updateData()" aria-describedby="emailHelp" disabled>
+                          <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
+                        </div>
+                        <div class="col mb-3 pb-3">
+                          <label for="exampleInputEmail1" class="form-label">Nome</label>
+                          <input type="text" class="form-control element" id="name" value="" onchange="updateData()" aria-describedby="emailHelp">
+                          <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col mb-3 pb-3">
+                          <label for="exampleInputEmail1" class="form-label">Posição x</label>
                           <input type="number" class="form-control element" id="pos_x" value="0" onchange="animateData(this, 1)" aria-describedby="emailHelp">
                           <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
                         </div>
                         <div class="col mb-3 pb-3">
-                          <label for="exampleInputEmail1" class="form-label">Pasição y</label>
+                          <label for="exampleInputEmail1" class="form-label">Posição y</label>
                           <input type="number" class="form-control element" id="pos_y" value="470" onchange="animateData(this, 2)" aria-describedby="emailHelp">
                           <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
                         </div>
@@ -318,17 +363,17 @@
                           </div>
                           <div class="col mb-3 pb-3">
                             <label for="exampleInputEmail1" class="form-label">Fundo colunas</label>
-                            <input type="number" class="form-control element" id="bg_x" value="20" onchange="updateData()" aria-describedby="emailHelp">
+                            <input type="number" class="form-control element" id="bg_cols" value="20" onchange="updateData()" aria-describedby="emailHelp">
                             <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
                           </div>
                           <div class="col mb-3 pb-3">
                             <label for="exampleInputEmail1" class="form-label">Fundo linhas</label>
-                            <input type="number" class="form-control element" id="bg_y" value="1" onchange="updateData()" aria-describedby="emailHelp">
+                            <input type="number" class="form-control element" id="bg_lines" value="1" onchange="updateData()" aria-describedby="emailHelp">
                             <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
                           </div>
                         </div>
                         <div class="row">
-                          <div class="col mb-3 pb-3">
+                          <div class="col mb-3 pb-3 border-bottom">
                             <label for="exampleInputEmail1" class="form-label">Fundo largura</label>
                             <input type="number" class="form-control element" id="bg_width" value="30" onchange="updateData()" aria-describedby="emailHelp">
                             <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
@@ -337,6 +382,11 @@
                             <label for="exampleInputEmail1" class="form-label">Fundo altura</label>
                             <input type="number" class="form-control element" id="bg_height" value="0" onchange="updateData()" aria-describedby="emailHelp">
                             <div hidden="" id="textHelp" class="form-text">We'll never share your email with anyone else.</div>
+                          </div>
+                        </div>
+                        <div class="row mb-1">
+                          <div class="col">
+                            <button type="button" class="btn btn-success" onclick="saveData()">Salvar</button>
                           </div>
                         </div>
                       </div>
@@ -362,6 +412,7 @@
     <!-- <script type="module" src="assets/js/main.js"></script> -->
     <script src="assets/js/AnimaCanvas.js"></script>
     <script src="assets/js/Character.js"></script>
+    <script src="assets/js/functions.js"></script>
     <script src="assets/js/main.js"></script>
     <script src="assets/js/script.js"></script>
   </body>

@@ -18,6 +18,7 @@ class Character extends AnimaCanvas {
         this.x = typeof props.x == 'undefined' ? 0 : props.x;  // Define a posição x
         this.y = typeof props.y == 'undefined' ? 0 : props.y;  // Define a posição y
         this.speed = typeof props.speed == 'undefined' ? 5 : props.speed;  // Define a velocidade
+        this.reverse = typeof props.reverse == 'undefined' ? false : props.reverse;
         this.backgroundScale = typeof props.backgroundScale == 'undefined' ? 1 : props.backgroundScale;
         this.spriteScale = typeof props.spriteScale == 'undefined' ? 2 : props.spriteScale;  // Aumenta o tamanho do sprite sem distorcer
         this.numColsBg = typeof props.numColsBg == 'undefined' ? 5 : parseInt(props.numColsBg);  // Números de colunas background
@@ -27,15 +28,18 @@ class Character extends AnimaCanvas {
         this.moveX = typeof props.moveX == 'undefined' ? false : props.moveX;  // Adiciona movimento na horizontal
         this.moveY = typeof props.moveY == 'undefined' ? false : props.moveY;  // Adiciona movimento na vertical
         this.moveScale = typeof props.moveScale == 'undefined' ? 100 : props.moveScale;
+        this.zoom = typeof props.zoom == 'undefined' ? this.currentZoom : props.zoom;
         this.animateOnload = typeof props.animateOnload == 'undefined' ? true : props.animateOnload;
-        this.currentFrame = 0;
-        this.currentBg = 0;
-        this.move = 0;
+        this.currentFrame = !this.reverse ? 0 : this.animationFrames.length-1;
+        this.currentBg = !this.reverse ? 0 : this.backgroundAnimation.length-1;
+        this.move = !this.reverse ? 0 : this.animationFrames.length-1;
+        this.stateStop = false;
         this.colunaBg = 0;
         this.linhaBg = 0;
         this.currentCol = 0;
         this.currentLine = 0;
         this.moveLimit = (this.width/this.scl)*4;
+        this.setZoom(this.zoom);
         this.img.onload = () => {
             if(this.animateOnload) {
                 this.animate(this.animation);
@@ -44,20 +48,14 @@ class Character extends AnimaCanvas {
             }
         }
 
-        // document.addEventListener('keydown', function(evento) {
-        //     this.eventKeyCode = evento.keyCode;  // r=37 | l=39 | up=38 | dn=40 | espaço=32 | ctrl=17 | alt=18 | altgr=225
-
-        //     this.btnAction(evento.keyCode);
-        //     console.log('teste:', this.eventKeyCode)
-        // });
-        // this.img.onload = () => this.animate(this.animation);
-
-        // this.img.onload = () => this.addImage(this.backgroundImg, 0, 0, this.width/this.scl, this.height/this.scl)
-
         // Caso haja erro no caminho do arquivo
         this.img.onerror = () => {
             console.error('Erro ao carregar a imagem. Verifique o caminho em assets/img/');
         };
+    }
+
+    refresh() {
+        
     }
 
     createObjFrame = (qtd=1, cols=1, lines=1, width=0, height=0, stepCol=0, stepLine=0) => {
@@ -85,7 +83,7 @@ class Character extends AnimaCanvas {
         return frame;
     }
 
-    btnAction(key) {
+    btnAction(key=0) {
         switch(key) {
             case 65:  // Ctrl - Reproduz um frame por vez ao clicar
                 this.animate(false);
@@ -111,17 +109,39 @@ class Character extends AnimaCanvas {
             case 40:  // Para baixo - Move para baixo
                 this.moveDn();
                 break;
-            case 98:  // Diminuir a imagem de fundo
-                this.setBgScale(animate.backgroundScale - 0.1);
+            case 96:  // Diminui o zoom
+                this.animate();
                 break;
-            case 104:  // Aumentar a imagem de fundo
-                this.setBgScale(animate.backgroundScale + 0.1);
+            case 97:  // Reseta o Canvas e para a animação
+                this.stop();
+                this.reset();
+                break;
+            case 98:  // Inicia a animação
+                this.setZoom(this.currentZoom - 0.1);
+                break;
+            case 99:  // Diminuir a imagem de fundo
+                this.setBgScale(this.backgroundScale - 0.1);
+                break;
+            case 100:  // Ativa o reverso
+                this.reverse = true;
+                break;
+            case 101:  // Pausa
+                this.pause();
+                break;
+            case 102:  // Desativa o reverso
+                this.reverse = false;
+                break;
+            case 104:  // Aumenta o zoom
+                this.setZoom(this.currentZoom + 0.1);
+                break;
+            case 105:  // Aumentar a imagem de fundo
+                this.setBgScale(this.backgroundScale + 0.1);
                 break;
             case 107:  // Aumentar a imagem do sprite
-                this.setSpriteScale(animate.spriteScale + 0.1);
+                this.setSpriteScale(this.spriteScale + 0.1);
                 break;
             case 109:  // Diminuir a imagem do sprite
-                this.setSpriteScale(animate.spriteScale - 0.1);
+                this.setSpriteScale(this.spriteScale - 0.1);
                 break;
             default:
                 break;
@@ -207,7 +227,7 @@ class Character extends AnimaCanvas {
       this.moveY = moveY;
     }
 
-    speedUp(type=0, limit=15, element=false) {
+    speedUp(type=0, limit=15) {
         if(this.speed >= limit) {
             clearInterval(this.intervalSpeed); 
             return;
@@ -216,18 +236,20 @@ class Character extends AnimaCanvas {
         if(type == 0) {
             clearInterval(this.intervalSpeed);
             this.speed ++;
+
+            this.animate();
         } else {
             this.intervalSpeed = setInterval(() => {
                 this.speed ++;
 
-                // if(element) document.querySelector(element).innerHTML = this.speed;
-
                 if(this.speed >= limit) clearInterval(this.intervalSpeed); 
             }, 100);
+
+            this.animate();
         }
     }
 
-    speedDn(type=0, limit=1, element=false) {
+    speedDn(type=0, limit=0) {
         if(this.speed <= limit) {
             clearInterval(this.intervalSpeed); 
             return;
@@ -239,8 +261,6 @@ class Character extends AnimaCanvas {
         } else {
             this.intervalSpeed = setInterval(() => {
                 this.speed --;
-
-                // if(element) document.querySelector(element).innerHTML = this.speed;
 
                 if(this.speed <= limit) clearInterval(this.intervalSpeed); 
             }, 100);
@@ -323,11 +343,16 @@ class Character extends AnimaCanvas {
         }
     }
 
+    pause() {
+        if(!this.stateStop) this.stop();
+        else this.animate();
+    }
+
     draw(x=0, y=0) {
         this.clear(); // Limpa o canvas
 
         // Verifica se existe, quando não existir 0 o contador
-        if(!this.backgroundAnimation[this.currentBg]) this.currentBg = 0;
+        if(!this.backgroundAnimation[this.currentBg]) this.currentBg = !this.reverse ? 0 : this.backgroundAnimation.length-1;
 
         // Recebendo os dados do frame atual do background
         const bg = this.backgroundAnimation[this.currentBg];
@@ -345,7 +370,7 @@ class Character extends AnimaCanvas {
         }
 
         // Verificando se o frame existe para o contador, quando não existe, zera o contador para voltar a primeira posição
-        if(!this.animationFrames[this.currentFrame]) this.currentFrame = 0;
+        if(!this.animationFrames[this.currentFrame]) this.currentFrame = !this.reverse ? 0 : this.animationFrames.length-1;
         if(this.x+this.move*100 > this.moveLimit) this.move = -5;
 
 
@@ -367,6 +392,8 @@ class Character extends AnimaCanvas {
 
     animate(animation=true) {
         this.stop();
+
+        this.stateStop = !animation;
         
         let x = this.moveX ? this.x+this.move*this.moveScale : this.x;
         let y = this.moveY ? this.y+this.move*this.moveScale : this.y;
@@ -378,13 +405,19 @@ class Character extends AnimaCanvas {
         // this.addFrame(this.backgroundImg, 0, 0, 10, 1, this.speed, 1.25);
         // this.addFrame(this.img, x, y, 2, 4, this.speed);
 
-        this.currentFrame++;
-        this.currentBg++;
-        this.move++;
+        if(this.reverse) {
+            this.currentFrame--;
+            this.currentBg--;
+            this.move--;
+        } else {
+            this.currentFrame++;
+            this.currentBg++;
+            this.move++;
+        }
 
         const speed = 1000/this.speed;
 
-        if(!animation) {clearTimeout(this.timerId); return;} 
+        if(!animation || this.speed <= 0) {clearTimeout(this.timerId); return;} 
 
         this.timerId = setTimeout(() => {
             requestAnimationFrame(() => this.animate());
@@ -393,5 +426,6 @@ class Character extends AnimaCanvas {
 
     stop() {
         clearTimeout(this.timerId);
+        this.stateStop = true;
     }
 }
