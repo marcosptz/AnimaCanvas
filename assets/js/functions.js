@@ -327,16 +327,21 @@ const saveData = () => {
     const dataCharacter = JSON.parse(localStorage.getItem('dataCharacter'));
     const obj = {};
     const data = dataCharacter ? dataCharacter : [];
-    const id = getRandomIntInclusive(1, 100000);
+    const id_random = getRandomIntInclusive(1, 100000);
+    const index = data.findIndex(item => item.id == id.value);
 
 
     document.querySelectorAll('.element').forEach((el, i) => {
         obj[el.id] = el.value;
     });
 
-    if(obj['id'] != id.value) obj['id'] = id;
+    if(id.value == 0) {
+        obj['id'] = id_random;
 
-    data.push(obj);
+        data.push(obj);
+    } else {
+        if(data[index]) data[index] = obj;
+    }
 
     localStorage.setItem('dataCharacter', JSON.stringify(data));
 
