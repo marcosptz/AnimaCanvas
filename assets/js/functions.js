@@ -352,13 +352,9 @@ const queryData = (campo='img_path', query='img3.png') => {
         if(data) {
             document.querySelectorAll('.element').forEach(el => {
                 el.value = data[el.id];
-
-                console.log('teste', el.id, el.value)
             });
 
             updateData();
-
-            console.log('Data:', data)
 
             return true;
         } else {
@@ -374,6 +370,9 @@ const getData = () => {
     const dataCharacter = JSON.parse(localStorage.getItem('dataCharacter'));
     let row = '';
     let html = `<tbody>`;
+    let btn = `<button type="button" class="btn btn-secondary" onclick="deleteData('tstee')">
+                <i class="bi bi-trash-fill"></i>
+            </button>`;
 
     if(dataCharacter) {
         dataCharacter.forEach((item, i) => {
@@ -387,8 +386,12 @@ const getData = () => {
                         <td>${item.frame_y}</td>
                         <td>${item.bg_cols}</td>
                         <td>${item.bg_lines}</td>
+                        <td>
+                            <button type="button" class="btn btn-secondary" onclick="deleteData(${item.id})">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
+                        </td>
                     </tr>`;
-            console.log('Data:', item)
         });
 
         html += row + '</tbody>';
@@ -403,6 +406,19 @@ const getData = () => {
 
         return false;
     }
+}
+
+const deleteData = (id=0) => {
+    const dataCharacter = JSON.parse(localStorage.getItem('dataCharacter'));
+    const index = dataCharacter.findIndex(item => item.id == id);
+
+    if (index !== -1) {
+        dataCharacter.splice(index, 1);
+        localStorage.setItem('dataCharacter', JSON.stringify(dataCharacter));
+        getData();
+    }
+
+    console.log('dataCharacter:', dataCharacter)
 }
 
 const mountObjImg = (group, img) => {
